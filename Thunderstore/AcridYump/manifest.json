@@ -1,5 +1,5 @@
 {
-  "name": "AcridYump",
+  "name": "FixAcridYump",
   "version_number": "1.0.0",
   "website_url": "https://github.com/Kriper1111/R2-FixChefFoodSuck",
   "description": "Fixes Acrid's Leap ability by reintroducing a callback to OnMovementHit event",
