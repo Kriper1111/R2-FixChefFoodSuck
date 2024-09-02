@@ -1,8 +1,8 @@
 {
-  "name": "FixChefFoodSuck",
-  "version_number": "1.0.1",
+  "name": "AcridYump",
+  "version_number": "1.0.0",
   "website_url": "https://github.com/Kriper1111/R2-FixChefFoodSuck",
-  "description": "Fixes Chef's food pickup by re-enabling gravitational controllers and unlocking rigidbody",
+  "description": "Fixes Acrid's Leap ability by reintroducing a callback to OnMovementHit event",
   "dependencies": [
     "bbepis-BepInExPack-5.4.2117",
     "RiskofThunder-HookGenPatcher-1.2.3",
