@@ -16,18 +16,7 @@ public class AcridYump : BaseUnityPlugin {
 
     public void Awake() {
         On.EntityStates.Croco.BaseLeap.OnEnter += BaseLeapOnOnEnter;
-        On.EntityStates.Croco.BaseLeap.FixedUpdate += BaseLeapOnFixedUpdate;
         On.EntityStates.Croco.BaseLeap.OnExit += BaseLeapOnOnExit;
-    }
-
-    private void BaseLeapOnFixedUpdate(BaseLeap.orig_FixedUpdate orig, EntityStates.Croco.BaseLeap self) {
-        orig(self);
-        if (!self.isAuthority) { return; }
-        var instanceID = self.gameObject.GetInstanceID();
-        if (!_mixins.TryGetValue(instanceID, out var mixin)) return;
-        if (!mixin.DetonateNextNextFrame) return;
-        self.detonateNextFrame = true;
-        mixin.DetonateNextNextFrame = false;
     }
 
     private void BaseLeapOnOnEnter(BaseLeap.orig_OnEnter orig, EntityStates.Croco.BaseLeap self) {
@@ -53,11 +42,7 @@ public class AcridYump : BaseUnityPlugin {
     }
     
     public void OnDestroy() {
-        // Technically, unloading the plugin mid-run should be an issue?
-        // I don't actually know tbh
-        // It sure is problematic to create a BaseLeapMixin every OnEnter call.
         On.EntityStates.Croco.BaseLeap.OnEnter -= BaseLeapOnOnEnter;
-        On.EntityStates.Croco.BaseLeap.FixedUpdate -= BaseLeapOnFixedUpdate;
         On.EntityStates.Croco.BaseLeap.OnExit -= BaseLeapOnOnExit;
     }
 }
