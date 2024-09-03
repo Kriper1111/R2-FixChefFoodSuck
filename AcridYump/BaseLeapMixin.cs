@@ -5,12 +5,15 @@ namespace AcridYump;
 
 public class BaseLeapMixin {
     private readonly BaseLeap _self;
+    public bool DetonateNextNextFrame;
 
     public BaseLeapMixin(BaseLeap other) {
         _self = other;
     }
     
     public void OnMovementHit(ref CharacterMotor.MovementHitInfo info) {
-        _self.detonateNextFrame = true;
+        if (_self.isAuthority) {
+            DetonateNextNextFrame = true;
+        }
     }
 }
