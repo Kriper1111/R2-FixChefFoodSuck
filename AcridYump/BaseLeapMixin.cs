@@ -11,6 +11,8 @@ public class BaseLeapMixin {
     }
     
     public void OnMovementHit(ref CharacterMotor.MovementHitInfo info) {
-        _self.detonateNextFrame = true;
+        if (_self.isAuthority) {
+            _self.detonateNextFrame = true;
+        }
     }
 }
