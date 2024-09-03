@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BepInEx;
+﻿using BepInEx;
 using On.EntityStates.Croco;
 
 namespace AcridYump;
@@ -12,8 +11,6 @@ public class AcridYump : BaseUnityPlugin {
     public const string PluginName = "AcridYump";
     public const string PluginVersion = "1.0.0";
     
-    private readonly Dictionary<int, BaseLeapMixin> _mixins = new();
-
     public void Awake() {
         On.EntityStates.Croco.BaseLeap.OnEnter += BaseLeapOnOnEnter;
         On.EntityStates.Croco.BaseLeap.OnExit += BaseLeapOnOnExit;
@@ -22,29 +19,24 @@ public class AcridYump : BaseUnityPlugin {
     private void BaseLeapOnOnEnter(BaseLeap.orig_OnEnter orig, EntityStates.Croco.BaseLeap self) {
         orig(self);
         
-        var instanceID = self.gameObject.GetInstanceID();
-        if (self.isAuthority && !_mixins.ContainsKey(instanceID)) {
-            var mixin = new BaseLeapMixin(self);
-            self.characterMotor.onMovementHit += mixin.OnMovementHit;
-            _mixins[instanceID] = mixin;
+        var acridJumpController = self.gameObject.GetComponent<AcridJumpEventController>();
+        if (acridJumpController == null) {
+            acridJumpController = self.gameObject.AddComponent<AcridJumpEventController>();
+            acridJumpController.enabled = false;
         }
+
+        acridJumpController.leapAbility = self;
+        acridJumpController.enabled = true;
     }
 
     private void BaseLeapOnOnExit(BaseLeap.orig_OnExit orig, EntityStates.Croco.BaseLeap self) {
-        var instanceID = self.gameObject.GetInstanceID();
-        if (self.isAuthority && _mixins.ContainsKey(instanceID)) {
-            var mixin = _mixins[instanceID];
-            self.characterMotor.onMovementHit -= mixin.OnMovementHit;
-            _mixins.Remove(instanceID);
-        }
+        var acridJumpController = self.gameObject.GetComponent<AcridJumpEventController>();
+        acridJumpController.enabled = false;
 
         orig(self);
     }
     
     public void OnDestroy() {
-        // Technically, unloading the plugin mid-run should be an issue?
-        // I don't actually know tbh
-        // It sure is problematic to create a BaseLeapMixin every OnEnter call.
         On.EntityStates.Croco.BaseLeap.OnEnter -= BaseLeapOnOnEnter;
         On.EntityStates.Croco.BaseLeap.OnExit -= BaseLeapOnOnExit;
     }
